@@ -1,4 +1,4 @@
-# 2024 Web Programming - JSP & HTML % CSS Coursework
+# 2024 Web Programming - JSP & HTML & CSS Coursework
 
 This repository is dedicated to backing up and organizing the projects and exercises I completed during my university web programming courses in 2024.
 
