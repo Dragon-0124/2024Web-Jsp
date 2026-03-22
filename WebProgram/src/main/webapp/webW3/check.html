@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+</head>
+<body>
+	<fieldset>
+		<legend>상품 선택</legend>
+		<p><b>주문할 상품을 선택해 주세요.</b></p>
+		<ul>
+			<li>
+				<label><input type="checkbox" name="prod" value="s_3">선물용 3kg</label>
+				<input type="number" min="0" max="5">개(최대 5개)
+			</li>
+			<li>
+				<label><input type="checkbox" name="prod" value="s_5">선물용 5kg</label>
+				<input type="number" min="0" max="3">개(최대 3개)
+			</li>
+			<li>
+				<label><input type="checkbox" name="prod" value="f_3">가정용 3kg</label>
+			</li>
+			<li>
+				<label><input type="checkbox" name="prod" value="f_5">가정용 5kg</label>
+			</li>
+		</ul>
+		<p><b>포장 선택</b></p>
+		<ul>
+		<li><label><input type="radio" name="gift" value="yes">선물 포장</label></li>
+		<li><label><input type="radio" name="gift" value="no">선물 포장 안 함</label></li>
+		</ul>
+	</fieldset>
+	<form>
+		<p>
+		<input type="range" min="0" max="100" step="1" value="20" oninput="document.getElementById('selected-value').innerText = this.value">
+		<span id="selected-calue">20</span>	
+		</p>
+		<p><input type="button" value="결정"></p>
+	</form>
+	
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<fieldset>
+	<legend>배송 정보</legend>
+	<ul id="shipping">
+		<li>
+		<label for="prod">주문 상품</label>
+		<input type="text" id="prod" value="상품용 3KG">주문 상품
+		</li>
+		<li>
+		<label for="prod">이름</label>
+		<input type="text" id="user_name" autofocus>
+		</li>
+		<li>
+		<label for="prod">배송 주소</label>
+		<input type="text" id="addr">
+		</li>
+		<li>
+		<label for="prod">이메일</label>
+		<input type="email" id="mail">
+		</li>
+		<li>
+		<label for="prod">연락처</label>
+		<input type="tel" id="phone" placeholder="하이폰 빼고 입력해 주세요.(01012345678)">
+		</li>
+		<li>
+		<label for="prod">배송 지정</label>
+		<input type="date" id="d-day" ><small>(주문일로부터 최소 3일 이후)</small>
+		</li>
+	</ul>
+</fieldset>
+<div>
+	<input type="submit" value="주문하기">
+	<input type="submit" value="취소하기">
+</div>
+</body>
+</html>

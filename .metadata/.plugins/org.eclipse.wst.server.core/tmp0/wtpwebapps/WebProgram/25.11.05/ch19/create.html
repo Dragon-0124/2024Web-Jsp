@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="css/subject.css">
+</head>
+<body>
+<div class="container">
+	<h1>Web Programming</h1>
+	<p>공부할 주제를 기록해 보세요</p>
+	
+	<form action="subject" class="hidden">주제</form>
+	<form action="text" id="subject" autofocus>
+	<button>추가</button>
+	</form>
+	<ul id="itemList"></ul>
+</div>
+
+<script>
+	document.addEventListener("DOMContentLoaded", function(){
+		const button=document.querySelector("button");
+		button.addEventListener("click", function(event){
+			event.preventDefault();
+			newRegister();
+		});
+	});
+	
+	function newRegister(){
+		const newItem = document.createElement("li");
+		const subject = document.querySelector("#subject");
+		const newText = document.createTextNode(subject.value);
+		newItem.appendChild(newText);
+		
+		const itemList = document.querySelector("#itemList");
+		itemList.appendChild(newItem);
+		
+		subject.value="";
+		
+	}
+
+</script>
+</body>
+</html>

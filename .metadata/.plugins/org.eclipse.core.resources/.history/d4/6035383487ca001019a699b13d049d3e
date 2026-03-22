@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 멀티툴</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      /* [변경] display: flex, width: 100vw 제거 */
+      height: 100vh;
+      overflow-x: hidden; /* 가로 스크롤 방지 */
+    }
+
+    aside {
+      width: 240px;
+      min-width: 240px;
+      background: #f1f1f1;
+      border-right: 2px solid #ccc;
+      transition: width 0.3s ease, min-width 0.3s ease; /* [변경] min-width 추가 */
+      
+      /* [추가] aside를 화면에 고정 */
+      position: fixed;
+      height: 100vh;
+      top: 0;
+      left: 0;
+      z-index: 10; /* 헤더보다 위에 오도록 */
+    }
+
+    aside.closed {
+      width: 60px;
+      min-width: 60px;
+    }
+
+    .layout {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      
+      /* [변경] width: 100% -> margin-left: 240px */
+      /* [추가] aside 너비만큼 왼쪽 여백을 줌 */
+      margin-left: 240px; 
+      /* [변경] width -> margin-left 로 트랜지션 대상 변경 */
+      transition: margin-left 0.3s ease; 
+    }
+
+    /* [추가] aside가 닫혔을 때 .layout의 마진을 줄여줌 */
+    aside.closed + .layout {
+      margin-left: 60px;
+    }
+
+
+    header {
+      height: 70px;
+      border-bottom: 2px solid #000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      background: #fff;
+      /* [추가] 헤더가 aside 위에 보이도록 (필요시) */
+      position: relative; 
+      z-index: 5;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+      border: 2px solid #000;
+      padding: 5px 10px;
+      background: #fafafa;
+    }
+
+    .login-btn {
+      padding: 8px 16px;
+      border: 2px solid #333;
+      background: #fff;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .hamburger {
+      /* [변경] position: absolute -> fixed */
+      /* 햄버거 버튼이 aside와 겹치지 않고 항상 그 자리에 있도록 고정 */
+      position: fixed; 
+      top: 20px;
+      left: 15px; /* [변경] 20px -> 15px (보기 좋게) */
+      width: 30px; /* [변경] 35px -> 30px (보기 좋게) */
+      height: 25px; /* [변경] 30px -> 25px (보기 좋게) */
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 20; /* [추가] aside 보다 위에 보이도록 */
+    }
+
+    .hamburger div {
+      width: 100%;
+      height: 4px; /* [변경] 5px -> 4px */
+      background: #000;
+    }
+
+    main {
+      flex: 1;
+      padding: 20px;
+      background: #fff;
+      overflow-y: auto;
+      /* [변경] 불필요해진 transition 제거 */
+    }
+    
+
+    footer {
+      height: 50px;
+      border-top: 2px solid #000;
+      display: flex;
+      align-items: center;
+      padding-left: 15px;
+      background: #fafafa;
+    }
+  </style>
+</head>
+<body>
+  <aside id="aside">
+    <h2 style="padding:20px; margin-top: 60px;">aside</h2>
+  </aside>
+
+
+  <div class="layout">
+
+    <header>
+      <div class="hamburger" id="hamBtn">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <div class="logo">AI 멀티툴</div>
+      <button class="login-btn">로그인</button>
+    </header>
+
+    <main>
+      main
+    </main>
+
+    <footer>
+      footer
+    </footer>
+  </div>
+
+  <script>
+    const aside = document.getElementById("aside");
+    const hamBtn = document.getElementById("hamBtn");
+
+    hamBtn.addEventListener("click", () => {
+      aside.classList.toggle("closed");
+    });
+    
+  </script>
+</body>
+</html>

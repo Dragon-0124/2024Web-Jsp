@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>한양 햄버거</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+	body{
+		font-family: 'Segoe UI', sans-serif;
+		margin: 0;
+		padding: 0;
+		background: #f6f6f6;
+		display: flex;
+		justify-content: center;
+	}
+
+	.container{
+		width: 960px;
+		background: #f6f6f6;
+		margin: 0 auto;
+	}
+	
+	header, nav, main, section, article, aside, footer{
+		display: block;
+		margin-bottom: 16px;
+	}
+	
+	header, footer{
+		background: #b71c1c;
+		color: #fff;
+		padding: 20px;
+		text-align: center;
+		border-radius: 8px;
+	}
+	
+	nav{
+		background: #fff3e0;
+		padding: 10px 20px;
+		text-align: center;
+		border-radius: 8px;
+	}
+	
+	nav a{
+		margin:0 20px;
+		text-decoration: none;
+		color: #b71c1c;
+		font-weight: bold;
+	}
+	
+	main{
+		text-align: center;
+	}
+	
+	.menu-list{
+		display: flex;
+		gap: 24px;
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+	
+	.menu-item{
+		background: #fff;
+		padding: 16px;
+		border-radius: 8px;
+		width: 220px;
+		text-align: center;
+		box-shadow:0 2px 6px rgba(0, 0, 0, 0.1);
+	}
+	
+	.menu-item img{
+		width: 150px;
+		height: 120px;
+		object-fit: cover;
+		border-radius: 8px;
+	}
+	
+	.order-section, .review-section, #cart-section, #payment-section{
+		background: #fff;
+		border-radius: 8px;
+		padding: 24px;
+		margin-bottom: 24px;
+		text-align: left;
+	}
+	
+	label {
+		font-weight: bold;
+		display: block;
+		margin-top: 10px;
+	}
+	
+	input, select, textarea{
+		margin-top: 8px;
+		width: 100%;
+		padding: 6px;
+		border-radius: 4px;
+		border: 1px solid #bbb;
+	}
+
+	.button-group {
+		display: flex;
+		gap: 10px;
+		margin-top: 12px;
+	}
+	
+	.button-group button {
+		flex: 1;
+		margin-top: 0;
+	}
+	
+	button {
+		background: #b71c1c;
+		color: #fff;
+		border: none;
+		cursor: pointer;
+		margin-top: 12px;
+		padding: 8px;
+		border-radius: 4px;
+		font-weight: bold;
+	}
+	
+	button:hover{
+		background: #a31515;
+	}
+	
+	aside{
+		background: #f9e8e8;
+		padding: 14px;
+		border-radius: 8px;
+		text-align: center;
+		font-weight: bold;
+	}
+	
+	#review-list ul{
+		padding-left: 0;
+		list-style: none;
+		margin-top: 20px;
+	}
+	
+	#review-list li{
+		padding: 12px;
+		border-bottom: 1px solid #ddd;
+	}
+
+	#cart-list li {
+		padding: 8px 0;
+		border-bottom: 1px dashed #eee;
+		display: flex;
+		justify-content: space-between;
+	}
+
+	#cart-total {
+		margin-top: 15px;
+		font-size: 1.2em;
+		font-weight: bold;
+		text-align: right;
+		border-top: 2px solid #b71c1c;
+		padding-top: 10px;
+	}
+</style>
+
+<script>
+	const menuPrices = {
+		'bulgogi': { name: '불고기버거', price: 7000 },
+		'cheese': { name: '치즈 버거', price: 7500 },
+		'hashbrown': { name: '해쉬브라운 버거', price: 8000 },
+		'photato': { name: '감자 튀김', price: 2000 },
+		'chstick': { name: '치즈 스틱', price: 2500 }
+	};
+
+	let cartItems = [];
+
+	function addToCart() {
+		const burgerType = document.getElementById('burger-type').value;
+		const qty = parseInt(document.getElementById('qty').value);
+
+		if (!burgerType || qty < 1) {
+			alert('메뉴 선택과 수량을 입력해주세요.');
+			return;
+		}
+
+		const itemInfo = menuPrices[burgerType];
+		
+		if (itemInfo) {
+			const existingItem = cartItems.find(item => item.id === burgerType);
+			
+			if (existingItem) {
+				existingItem.qty += qty;
+			} else {
+				cartItems.push({
+					id: burgerType,
+					name: itemInfo.name,
+					price: itemInfo.price,
+					qty: qty
+				});
+			}
+
+			alert(`${itemInfo.name} ${qty}개가 장바구니에 담겼습니다.`);
+			renderCart();
+			document.getElementById('order-form').reset();
+			document.getElementById('qty').value = 1;
+		} else {
+			alert('유효하지 않은 메뉴입니다.');
+		}
+	}
+
+	function renderCart() {
+		const cartList = document.getElementById('cart-list');
+		const cartTotalDiv = document.getElementById('cart-total');
+		let total = 0;
+		let listHtml = '';
+
+		if (cartItems.length === 0) {
+			listHtml = '<li style="text-align: center; color: #777; border-bottom: none;">장바구니가 비어 있습니다.</li>';
+		} else {
+			cartItems.forEach(item => {
+				const itemTotal = item.price * item.qty;
+				total += itemTotal;
+				listHtml += `
+					<li>
+						<span>${item.name} x ${item.qty}</span>
+						<span>${itemTotal.toLocaleString()}원</span>
+					</li>
+				`;
+			});
+		}
+
+		cartList.innerHTML = `<ul>${listHtml}</ul>`;
+		cartTotalDiv.textContent = `총 주문 금액: ${total.toLocaleString()}원`;
+	}
+
+	function placeOrder() {
+		const customerName = document.getElementById('name').value.trim();
+		const customerPhone = document.getElementById('phone').value.trim();
+
+		if (cartItems.length === 0) {
+			alert('장바구니가 비어 있어 주문할 수 없습니다.');
+			return false;
+		}
+
+		if (!customerName || !customerPhone) {
+			alert('주문을 위해 이름과 연락처를 입력해주세요.');
+			return false;
+		}
+
+		let orderSummary = `[${customerName}님 주문 내역]\n\n`;
+		let total = 0;
+
+		cartItems.forEach(item => {
+			const itemTotal = item.price * item.qty;
+			total += itemTotal;
+			orderSummary += `${item.name} (${item.qty}개) : ${itemTotal.toLocaleString()}원\n`;
+		});
+
+		orderSummary += `\n총 주문 금액: ${total.toLocaleString()}원`;
+		orderSummary += `\n\n주문이 완료되었습니다.`;
+		
+		alert(orderSummary);
+
+		cartItems = [];
+		renderCart();
+		document.getElementById('payment-form').reset(); 
+		
+		return true; 
+	}
+
+	window.onload = function(){
+		renderCart();
+
+		const reviewForm = document.getElementById('review-form');
+		const reviewList = document.querySelector('#review-list ul');
+		
+		reviewForm.addEventListener('submit', function(e) {
+			e.preventDefault();
+			
+			const name = document.getElementById('reviewer').value.trim(); 
+			const star = document.getElementById('star').value;
+			const message = document.getElementById('review-msg').value.trim(); 
+			
+			if (name && star && message) {
+			    const li = document.createElement('li');
+			    li.innerHTML = `
+			        <strong>${name}</strong>
+			        <span style="color:#f39c12;">${'★'.repeat(star)}${'☆'.repeat(5 - star)}</span><br/>
+			        <p>${message}</p>
+			    `; 
+			    
+			    reviewList.prepend(li);
+			    reviewForm.reset();
+			}
+		});
+
+		document.getElementById('add-to-cart-btn').addEventListener('click', addToCart);
+		
+		document.getElementById('payment-form').addEventListener('submit', function(e) {
+			e.preventDefault();
+			placeOrder();
+		});
+	};
+
+</script>
+</head>
+<body>
+	<div class='container'>
+		<header>
+			<h1>한양 햄버거 매장</h1>
+			<p> 맛있고 신선한 햄버거를 제공합니다.</p>
+		</header>
+		
+		<nav>
+			<a href="#menu">메뉴</a>
+			<a href="#order">주문하기</a>
+			<a href="#cart-section">장바구니</a>
+			<a href="#payment-section">결제하기</a>
+			<a href="#review">리뷰 남기기</a>
+		</nav>
+		
+		<main>
+			<section id="menu">
+				<h3>버거 메뉴 BEST 3</h3>
+				<div class="menu-list">
+					<article class="menu-item">
+						<img src="images/bul.jpg" alt="불고기버거">
+						<h3>불고기버거</h3>
+						<p>7000원</p>
+						<p>달콤한 소스와 신선한 야채</p>
+					</article>
+					<article class="menu-item">
+						<img src="images/cheese.jpg" alt="치즈버거">
+						<h3>치즈버거</h3>
+						<p>7500원</p>
+						<p>진한 치즈와 소고기 패티의 조화</p>
+					</article>
+					<article class="menu-item">
+						<img src="images/hash.jpg" alt="해쉬브라운버거">
+						<h3>해쉬브라운버거</h3>
+						<p>8000원</p>
+						<p>바삭한 해쉬브라운이 들어간<br>스패셜 버거</p>
+					</article>
+				</div>
+				<h3>사이트 메뉴 BEST 2</h3>
+				<div class="menu-list">
+					<article class="menu-item">
+						<img src="images/photato.jpg" alt="감자 튀김">
+						<h3>감자 튀김</h3>
+						<p>2000원</p>
+						<p>바로 튀겨낸 바삭바삭한<br>후렌치 포테이토</p>
+					</article>
+					<article class="menu-item">
+						<img src="images/chstick.jpg" alt="치즈스틱">
+						<h3>치즈스틱</h3>
+						<p>2500원</p>
+						<p>모짜렐라치즈를 통으로 튀겨 만든<br>바삭하고 고소한 치즈스틱</p>
+					</article>
+				</div>
+			</section>
+			
+			<section id="order" class="order-section">
+				<h2>🍔 메뉴 담기</h2>
+				<form id="order-form">
+					<label for="burger-type">메뉴 선택</label>
+					<select id="burger-type" name="burger-type" required>
+						<option value="">--메뉴 선택--</option>
+						<option value="bulgogi">불고기버거</option>
+						<option value="cheese">치즈 버거</option>
+						<option value="hashbrown">해쉬브라운 버거</option>
+						<option value="photato">감자 튀김</option>
+						<option value="chstick">치즈 스틱</option>
+					</select>
+					
+					<label for="qty">수량</label>
+					<input type="number" id="qty" min="1" max="10" value="1" required/>
+					
+					<div class="button-group">
+						<button type='button' id="add-to-cart-btn">🛒 장바구니 담기</button>
+					</div>
+				</form>
+			</section>
+
+			<section id="cart-section" class="order-section">
+				<h2>🛒 나의 장바구니</h2>
+				<div id="cart-list">
+				</div>
+				<div id="cart-total">
+				</div>
+			</section>
+			
+			<section id="payment-section" class="order-section">
+				<h2>💰 결제 정보 입력</h2>
+				<form id="payment-form">
+					<label for="name">이름</label>
+					<input type="text" id="name" maxlength="10" required placeholder="고객명 입력"/>
+					
+					<label for="phone">연락처</label>
+					<input type="text" id="phone" placeholder="010-0000-0000" pattern="\d{3}-\d{4}-\d{4}" required/>
+					
+					<div class="button-group">
+						<button type='submit' id="place-order-btn">📝 최종 주문하기</button>
+					</div>
+				</form>
+			</section>
+
+			<section id="review" class="review-section">
+				<h2>⭐ 리뷰 남기기</h2>
+				<form id="review-form">
+					<label for="reviewer">이름</label>
+					<input type="text" id="reviewer" maxlength="10" required placeholder="고객명 입력"/>
+					
+					<label for="star">별점</label>
+					<select id="star" name="star" required>
+					<option value="">--별점 선택--</option>
+					<option value="5">★★★★★</option>
+					<option value="4">★★★★☆</option>
+					<option value="3">★★★☆☆</option>
+					<option value="2">★★☆☆☆</option>
+					<option value="1">★☆☆☆☆</option>
+					</select>
+					
+					<label for="review-msg">리뷰</label>
+					<textarea id="review-msg" name="review=msg" rows="3" maxlength="200" required placeholder="후기를 남겨주세요"></textarea>
+					
+					<button type="submit">리뷰 등록</button>
+				</form>
+				
+				<div id="review-list">
+					<h3>등록된 리뷰</h3>
+					<ul></ul>
+				</div>
+			</section>
+		</main>
+	</div>
+</body>
+</html>

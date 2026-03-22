@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>가을 풍경 갤러리 (모달 + 슬라이드쇼)</title>
+<style>
+  :root{
+    --bg:#111; --fg:#eee; --accent:#ff8a00; --muted:#888;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--fg); font-family:system-ui, Arial, sans-serif;
+  }
+  header{
+    max-width:1100px; margin:20px auto 10px; padding:0 16px;
+  }
+  h1{margin:6px 0 4px; font-weight:800}
+  .credit{color:var(--muted); font-size:12px}
+  .credit a{color:#ddd}
+
+  /* 슬라이드쇼 배너 */
+  .slideshow{
+    max-width:1100px; margin:10px auto 24px; padding:0 16px;
+  }
+  .slide-frame{
+    position:relative; overflow:hidden; border-radius:14px; height:360px;
+    box-shadow:0 12px 30px rgba(0,0,0,.35);
+  }
+  .slide-track{
+    display:flex; height:100%; width:100%; transition:transform .7s ease;
+  }
+  .slide{
+    min-width:100%; height:100%;
+    background:#222 center/cover no-repeat;
+  }
+  .slide-caption{
+    position:absolute; left:12px; bottom:12px;
+    background:rgba(0,0,0,.45); padding:8px 10px; border-radius:8px; font-size:14px;
+  }
+  .slide-controls{
+    position:absolute; right:12px; bottom:12px; display:flex; gap:8px;
+  }
+  .btn{
+    appearance:none; border:1px solid #fff5; background:#0008; color:#fff;
+    padding:6px 10px; border-radius:8px; cursor:pointer; font-size:13px;
+  }
+  .btn:hover{background:#000c}
+
+  /* 갤러리 그리드 */
+  .gallery{
+    max-width:1100px; margin:0 auto; padding:0 16px 40px;
+  }
+  .grid{
+    display:grid; gap:14px;
+    grid-template-columns:repeat(4,1fr);
+  }
+  @media (max-width:980px){ .grid{grid-template-columns:repeat(4,1fr);} }
+  @media (max-width:720px){ .grid{grid-template-columns:repeat(3,1fr);} }
+  @media (max-width:520px){ .grid{grid-template-columns:repeat(2,1fr);} }
+  .thumb{
+    position:relative; border-radius:12px; overflow:hidden; cursor:pointer;
+    box-shadow:0 8px 18px rgba(0,0,0,.35);
+  }
+  .thumb img{
+    width:100%; height:150px; object-fit:cover; display:block;
+    transition:transform .3s ease;
+  }
+  .thumb:hover img{ transform:scale(1.05) }
+  .thumb .tag{
+    position:absolute; left:8px; bottom:8px; background:rgba(0,0,0,.45);
+    padding:4px 8px; border-radius:999px; font-size:12px;
+  }
+
+  /* 모달 */
+  .modal{
+    position:fixed; inset:0; background:rgba(0,0,0,.75);
+    display:none; align-items:center; justify-content:center; z-index:50;
+  }
+  .modal.open{ display:flex; }
+  .modal-content{
+    position:relative; max-width:min(92vw,1100px); max-height:86vh;
+    background:#000; border-radius:12px; padding:10px;
+    box-shadow:0 20px 60px rgba(0,0,0,.6);
+  }
+  .modal img{
+    width:100%; height:auto; max-height:72vh; display:block; border-radius:8px;
+    object-fit:contain; background:#000;
+  }
+  .modal-footer{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    margin-top:8px; color:#ccc; font-size:13px;
+  }
+  .controls{display:flex; gap:8px}
+  .ctrl{
+    appearance:none; border:1px solid #fff3; background:#111; color:#fff;
+    padding:6px 10px; border-radius:8px; cursor:pointer; font-size:13px;
+  }
+  .ctrl:hover{background:#1b1b1b}
+  .close{
+    position:absolute; top:8px; right:8px; background:#000a; border:1px solid #fff3;
+    color:#fff; padding:6px 10px; border-radius:8px; cursor:pointer;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>가을 풍경 갤러리</h1>
+    <div class="credit">이미지 출처: <a href="https://picsum.photos" target="_blank" rel="noopener">Lorem Picsum</a> (seed 고정)</div>
+  </header>
+
+  <!-- 자동 슬라이드쇼 배너 -->
+  <section class="slideshow" aria-label="가을 풍경 슬라이드쇼">
+    <div class="slide-frame">
+      <div class="slide-track" id="slideTrack" role="list"></div>
+      <div class="slide-caption" id="slideCaption">가을 풍경 1/12</div>
+      <div class="slide-controls">
+        <button class="btn" id="prevSlide">◀ 이전</button>
+        <button class="btn" id="toggleSlide">⏸ 일시정지</button>
+        <button class="btn" id="nextSlide">다음 ▶</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 갤러리 -->
+  <main class="gallery">
+    <div class="grid" id="grid"></div>
+  </main>
+
+  <!-- 모달 -->
+  <div class="modal" id="modal" aria-hidden="true" role="dialog" aria-label="이미지 확대 보기">
+    <div class="modal-content">
+      <button class="close" id="closeModal" aria-label="닫기">✕</button>
+      <img id="modalImg" alt="가을 풍경 확대 이미지" />
+      <div class="modal-footer">
+        <div id="modalInfo">1 / 10</div>
+        <div class="controls">
+          <button class="ctrl" id="prev">◀ 이전</button>
+          <button class="ctrl" id="play">⏸ 일시정지</button>
+          <button class="ctrl" id="next">다음 ▶</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // 12개 고정 이미지 (seed로 안정화)
+  const seeds = [
+    'autumn-01','autumn-02','autumn-03','autumn-04',
+    'autumn-05','autumn-06','autumn-07','autumn-08',
+    'autumn-09','autumn-10','autumn-11','autumn-12'
+  ];
+  const IMAGES = seeds.map((seed, i) => ({
+    thumb: `https://picsum.photos/seed/${seed}/400/260`,
+    full:  `https://picsum.photos/seed/${seed}/1400/900`,
+    alt:   `가을 풍경 ${i+1}`
+  }));
+
+  /* ---------- 상단 슬라이드쇼 ---------- */
+  const track = document.getElementById('slideTrack');
+  const slideCaption = document.getElementById('slideCaption');
+  let slideIndex = 0, slideTimer = null, slidePlaying = true;
+
+  function renderSlides(){
+    track.innerHTML = IMAGES.map(img => (
+      `<div class="slide" role="listitem" style="background-image:url('${img.full}')"></div>`
+    )).join('');
+  }
+  function updateSlide(){
+    track.style.transform = `translateX(-${slideIndex*100}%)`;
+    slideCaption.textContent = `가을 풍경 ${slideIndex+1}/12`;
+  }
+  function nextSlide(){ slideIndex = (slideIndex+1)%IMAGES.length; updateSlide(); }
+  function prevSlide(){ slideIndex = (slideIndex-1+IMAGES.length)%IMAGES.length; updateSlide(); }
+  function startSlideAuto(){
+    stopSlideAuto();
+    slideTimer = setInterval(nextSlide, 3000);
+    slidePlaying = true;
+    document.getElementById('toggleSlide').textContent = '⏸ 일시정지';
+  }
+  function stopSlideAuto(){
+    if(slideTimer){ clearInterval(slideTimer); slideTimer = null; }
+    slidePlaying = false;
+    document.getElementById('toggleSlide').textContent = '▶ 재생';
+  }
+
+  document.getElementById('nextSlide').addEventListener('click', ()=>{ nextSlide(); });
+  document.getElementById('prevSlide').addEventListener('click', ()=>{ prevSlide(); });
+  document.getElementById('toggleSlide').addEventListener('click', ()=>{
+    slidePlaying ? stopSlideAuto() : startSlideAuto();
+  });
+
+  /* ---------- 갤러리(그리드) ---------- */
+  const grid = document.getElementById('grid');
+  function renderGrid(){
+    grid.innerHTML = IMAGES.map((img, idx)=>`
+      <figure class="thumb" data-idx="${idx}" title="${img.alt}">
+        <img src="${img.thumb}" alt="${img.alt}" loading="lazy" />
+        <figcaption class="tag">${idx+1}</figcaption>
+      </figure>
+    `).join('');
+    grid.querySelectorAll('.thumb').forEach(el=>{
+      el.addEventListener('click', () => openModal(+el.dataset.idx));
+    });
+  }
+
+  /* ---------- 모달(확대 보기 + 자동재생) ---------- */
+  const modal = document.getElementById('modal');
+  const modalImg = document.getElementById('modalImg');
+  const modalInfo = document.getElementById('modalInfo');
+  const closeModalBtn = document.getElementById('closeModal');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  const playBtn = document.getElementById('play');
+
+  let index = 0;
+  let timer = null;
+  let playing = true;
+
+  function show(idx){
+    const item = IMAGES[idx];
+    modalImg.src = item.full;
+    modalImg.alt = item.alt;
+    modalInfo.textContent = `${idx+1} / ${IMAGES.length}`;
+  }
+
+  function openModal(startIndex=0){
+    index = startIndex; show(index);
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden','false');
+    // 모달 자동재생 시작
+    startAuto();
+    // 페이지 슬라이드쇼는 잠시 멈춤
+    stopSlideAuto();
+  }
+
+  function closeModal(){
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden','true');
+    stopAuto();
+    // 상단 슬라이드쇼 재개
+    startSlideAuto();
+  }
+
+  function next(){ index = (index+1) % IMAGES.length; show(index); }
+  function prev(){ index = (index-1 + IMAGES.length) % IMAGES.length; show(index); }
+
+  function startAuto(){
+    stopAuto();
+    timer = setInterval(next, 2000);
+    playing = true;
+    playBtn.textContent = '⏸ 일시정지';
+  }
+  function stopAuto(){
+    if(timer){ clearInterval(timer); timer = null; }
+    playing = false;
+    playBtn.textContent = '▶ 재생';
+  }
+
+  // 이벤트 바인딩
+  nextBtn.addEventListener('click', next);
+  prevBtn.addEventListener('click', prev);
+  playBtn.addEventListener('click', ()=> playing ? stopAuto() : startAuto());
+  closeModalBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
+  window.addEventListener('keydown', (e)=>{
+    if(!modal.classList.contains('open')) return;
+    if(e.key === 'Escape') closeModal();
+    if(e.key === 'ArrowRight') next();
+    if(e.key === 'ArrowLeft') prev();
+  });
+
+  /* ---------- 초기화 ---------- */
+  renderSlides();
+  updateSlide();
+  startSlideAuto();
+  renderGrid();
+</script>
+
+</body>
+</html>

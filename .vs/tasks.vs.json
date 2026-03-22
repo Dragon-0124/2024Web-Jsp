@@ -1,0 +1,10 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskLabel": "task-review",
+      "appliesTo": "WebProgram/src/main/webapp/25.11.26/review.html",
+      "type": "launch"
+    }
+  ]
+}

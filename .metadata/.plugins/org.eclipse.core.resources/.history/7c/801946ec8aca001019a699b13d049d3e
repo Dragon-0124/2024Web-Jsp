@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<rink rel="stylesheet" href="css/subject.css">
+</head>
+<body>
+	<div class="container">
+		<h1>Web Programming</h1>
+		<p>공부할 주제를 기록해 보세요</p>
+		<form action="">
+			<label for="subject" class="hidden">주제</label> <input type="text"
+				id="subject" autofocus>
+			<button>추가</button>
+		</form>
+		<hr>
+		<ul id="itemList"></ul>
+	</div>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function(){
+			const button = document.querySelector("button");
+			button.addEventListener("click", function(event){
+				event.preventDefault();
+			newRigister();
+		});
+			const itemList = dovument.querySelector("#itemList");
+			itemList.addEventListener("click",(event) =>{
+				if (ebent.target.tagName === "LI"){
+					if (confirm("삭제하시겠습니까?")){
+						event.target.remove();
+					}
+				}	
+			});
+		});
+		
+		function newRegister(){
+			const newItem = document.CreateElement("li");
+			const subject = document.querySelector("#subject");
+			const newText = document.createTextNode("subject.value");
+			
+			
+		}
+	
+	</script>
+</body>
+</html>
