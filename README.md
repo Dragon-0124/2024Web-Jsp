@@ -1,28 +1,27 @@
-# 2024 Web Programming - JSP & HTML & CSS Coursework
+# 2024 Web Programming Study Archive
 
-This repository is dedicated to backing up and organizing the projects and exercises I completed during my university web programming courses in 2024.
+This repository is a personal archive for storing and backing up code, exercises, and projects developed during my university Web Programming courses in 2024. 
 
-## 📌 Project Overview: "Hanyang Burger" Ordering System
-The main project currently included is a functional web-based ordering and review system for a fictional hamburger shop.
+## 📚 What I Learned
 
-### 🛠 Tech Stack
-- **Frontend**: HTML5, CSS3 (Flexbox for responsive layouts)
-- **Scripting**: JavaScript (ES6+) for dynamic UI logic
-- **Planned/Integrated**: JSP (JavaServer Pages) for backend processing
+### 1. Frontend Development (HTML5 & CSS3)
+- **HTML5**: Learned to structure web content using semantic tags to improve accessibility and SEO.
+- **CSS3**: Practiced styling web pages using Layout techniques (Flexbox), transitions, and responsive design principles.
+- **User Interface**: Focused on creating clean and intuitive layouts for better user experience (UX).
 
-### ✨ Key Features implemented in `Site(side).html`
-- **Dynamic Menu Display**: Showcases a list of menu items with descriptions and prices using semantic HTML elements.
-- **Shopping Cart System**: 
-  - Add/remove items with quantity selection.
-  - Real-time calculation of the total order amount.
-- **Customer Feedback (Review System)**: 
-  - Allows users to post reviews with star ratings.
-  - Includes functionality to delete existing reviews.
-- **Order Simulation**: Collects customer contact information and displays a summary of the final order.
+### 2. Dynamic Web Scripting (JavaScript)
+- Mastered DOM (Document Object Model) manipulation to create interactive web elements.
+- Implemented client-side logic such as data validation, event handling, and dynamic content updates.
 
-## 📂 Directory Structure
-- `/`: Root directory containing main HTML/JSP files.
-- `/images`: Contains assets for menu items (e.g., `bul.jpg`, `cheese.jpg`, `hash.jpg`).
+### 3. Backend Implementation (JSP - JavaServer Pages)
+- **Server-Side Logic**: Learned how to generate dynamic web content on the server using Java.
+- **Request/Response**: Understood the HTTP protocol and how to handle user data through GET/POST methods.
+- **Session & Cookie**: Practiced managing user states and authentication.
+- **Database Integration**: Explored connecting web applications to databases (JDBC) to store and retrieve persistent data.
+
+## 📂 Repository Structure
+- Each directory represents a specific week's lecture or a particular assignment.
+- Contains various source files including `.html`, `.css`, `.js`, and `.jsp`.
 
 ---
-*This is a personal backup for academic purposes.*
+*This repository serves as a technical backup and a record of my growth as a developer.*
