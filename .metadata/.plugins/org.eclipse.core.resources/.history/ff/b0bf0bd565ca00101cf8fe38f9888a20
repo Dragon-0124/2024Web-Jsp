@@ -1,6 +1,0 @@
-<%-- TODO : 강의슬라이드 내용에 맞추어 작업 후 제출할 것 --%>
-<%@ page contentType="text/html; charset=utf-8"%>
-<%@ page import="java.sql.*"%>
-<%
-	// TODO : 강의슬라이드 59페이지의 내용을 구현할 것 (Hint : 예제 코드와 유사하므로 예제 코드를 수정하여 제출하면 보다 효율적인 작업 가능 )
-%>

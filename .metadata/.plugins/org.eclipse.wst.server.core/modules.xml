@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<modules>
-  <module moduleId="org.eclipse.jst.jee.server:WebProgramP" serverId="Tomcat v10.1 Server at localhost"/>
-  <module moduleId="org.eclipse.jst.jee.server:JSPBOOK07" serverId="Tomcat v10.1.12 Server"/>
-  <module moduleId="org.eclipse.jst.jee.server:BookMarket06" serverId="Tomcat v10.1.12 Server"/>
-  <module moduleId="org.eclipse.jst.jee.server:JSPBook" serverId="Tomcat v10.1 Server at localhost"/>
-  <module moduleId="org.eclipse.jst.jee.server:WebProgram" serverId="Tomcat v10.1 Server at localhost"/>
-</modules>
